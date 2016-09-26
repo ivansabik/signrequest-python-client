@@ -14,7 +14,12 @@ class SignRequest:
     def __init__(self, api_token):
         self.api_token = api_token
         self.document = None
-        pass
+        self.from_email = None
+        self.message = None
+        self.signers = []
+        self.subject = None
+        self.url = None
+        self.uuid = None
 
     def _get_request_headers(self):
         '''Builds headers for HTTP request.'''
@@ -55,18 +60,49 @@ class SignRequest:
         except:
             raise
 
-    def send_sign_request(self, document='self', from_email=None, message=None, signers=[]):
+    def send_sign_request(self, document='self', from_email=None, message=None, signers=None):
+        if not from_email or not message or not signers:
+            raise Exception('From e-mail, message and signers are required')
         '''
         curl -X POST -H 'Authorization: Token api_token'
         -H 'Content-Type:application/json'
         -d '{"document": "https://signrequest.com/api/v1/documents/38595b6b-fdea-45d4-8279-f46e3ae2accd/", "from_email": "ivan@britecore.com", "message": "Please sign this document.\n\nThanks!", "signers": [{"email": "ivan@britecore.com"}]}'
         https://signrequest.com/api/v1/signrequests/
         '''
+        data = {}
+
         # document='self' is a keyword for using same document created before using this instance
-        if self.document and document != 'self':
-            pass  # Use self document
+        if self.document and document == 'self':
+            data['document'] = self.document.url
         else:
-            pass  # Use document originally passed arg
+            data['document'] = document
+        data['from_email'] = from_email
+        data['message'] = message
+
+        # SignRequest expects signers to be like {"email": ""} for convenience if signers passed is
+        # list of strings convert it, if it's a dict then use it
+        data['signers'] = []
+
+        # Signers can be a single email address, in that case convert to array with single element
+        if isinstance(signers, basestring):
+            signers = [signers]
+        for signer in signers:
+            data['signers'].append({'email': signer})
+
+        headers = self._get_request_headers()
+
+        response = requests.post(SIGN_REQUESTS_URL, data=json.dumps(data), headers=headers)
+        try:
+            response = response.json()
+            self.from_email = response.get('from_email')
+            self.message = response.get('message')
+            # Signer ideally would become object defined in class
+            self.signers = response.get('signers')
+            self.subject = response.get('subject')
+            self.url = response.get('url')
+            self.uuid = response.get('uuid')
+        except:
+            raise
 
 
 class Document:

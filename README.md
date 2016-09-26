@@ -31,4 +31,7 @@ doc = sr.create_document(file=file_encoded_string,
 2. Send signature request for the document created in step one:
 
 ```python
+sr.send_sign_request(from_email='john@johnssohn.com',
+                     message='Please sign this thing.',
+                     signers='james@jamessohn.com') # Can also be an array of emails
 ```
