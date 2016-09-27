@@ -58,17 +58,14 @@ class SignRequest:
             self.document = Document(response.json())
             return self.document
         except:
-            raise
+            raise Exception('{} - {} - {}'.format(response.status_code, response.get('document'),
+                                                  e))
 
     def send_sign_request(self, document='self', from_email=None, message=None, signers=None):
+        '''Sends a sing request by email to signer(s) specified.'''
         if not from_email or not message or not signers:
             raise Exception('From e-mail, message and signers are required')
-        '''
-        curl -X POST -H 'Authorization: Token api_token'
-        -H 'Content-Type:application/json'
-        -d '{"document": "https://signrequest.com/api/v1/documents/38595b6b-fdea-45d4-8279-f46e3ae2accd/", "from_email": "ivan@britecore.com", "message": "Please sign this document.\n\nThanks!", "signers": [{"email": "ivan@britecore.com"}]}'
-        https://signrequest.com/api/v1/signrequests/
-        '''
+
         data = {}
 
         # document='self' is a keyword for using same document created before using this instance
@@ -102,7 +99,8 @@ class SignRequest:
             self.url = response['url']
             self.uuid = response['uuid']
         except Exception as e:
-            raise Exception(response.get('document'))
+            raise Exception('{} - {} - {}'.format(response.status_code, response.get('document'),
+                                                  e))
 
 
 class Document:
@@ -117,5 +115,4 @@ class Document:
         self.security_hash = api_response['security_hash']
         self.signrequest = api_response['signrequest']
         self.status = api_response['status']
-        self.file_url = api_response['file_url']
         self.file = api_response['file']
