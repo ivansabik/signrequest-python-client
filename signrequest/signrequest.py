@@ -94,28 +94,28 @@ class SignRequest:
         response = requests.post(SIGN_REQUESTS_URL, data=json.dumps(data), headers=headers)
         try:
             response = response.json()
-            self.from_email = response.get('from_email')
-            self.message = response.get('message')
+            self.from_email = response['from_email']
+            self.message = response['message']
             # Signer ideally would become object defined in class
-            self.signers = response.get('signers')
-            self.subject = response.get('subject')
-            self.url = response.get('url')
-            self.uuid = response.get('uuid')
-        except:
-            raise
+            self.signers = response['signers']
+            self.subject = response['subject']
+            self.url = response['url']
+            self.uuid = response['uuid']
+        except Exception as e:
+            raise Exception(response.get('document'))
 
 
 class Document:
 
     def __init__(self, api_response):
-        self.url = api_response.get('url')
-        self.uuid = api_response.get('uuid')
-        self.external_id = api_response.get('external_id')
-        self.file_as_pdf = api_response.get('file_as_pdf')
-        self.name = api_response.get('name')
-        self.pdf = api_response.get('pdf')
-        self.security_hash = api_response.get('security_hash')
-        self.signrequest = api_response.get('signrequest')
-        self.status = api_response.get('status')
-        self.file_url = api_response.get('file_url')
-        self.file = api_response.get('file')
+        self.url = api_response['url']
+        self.uuid = api_response['uuid']
+        self.external_id = api_response['external_id']
+        self.file_as_pdf = api_response['file_as_pdf']
+        self.name = api_response['name']
+        self.pdf = api_response['pdf']
+        self.security_hash = api_response['security_hash']
+        self.signrequest = api_response['signrequest']
+        self.status = api_response['status']
+        self.file_url = api_response['file_url']
+        self.file = api_response['file']

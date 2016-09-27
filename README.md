@@ -42,7 +42,7 @@ You can also send a document without creating it first if you got an URL, for th
 from signrequest import SignRequest
 
 document = 'https://signrequest.com/api/v1/documents/c27f3e0b-616a-4a74-9182-c00d4e3aa16a/'
-sr = SignRequest('API_KEY').send_sign_request(document=document
+sr = SignRequest('API_KEY').send_sign_request(document=document,
                                               from_email='john@johnssohn.com',
                                               message='Please sign this thing.',
                                               signers=['a@eiou.com', 'z@yz.com'])
