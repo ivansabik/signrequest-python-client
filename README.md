@@ -16,7 +16,7 @@ Create document from base64 encoded document content:
 ```python
 import base64
 
-from signrequest import SignRequest
+from SignRequest import SignRequest
 
 sr = SignRequest('API_KEY')
 
@@ -39,7 +39,7 @@ sr.send_sign_request(from_email='john@johnssohn.com',
 You can also send a document without creating it first if you got an URL, for that specify it as argument when calling method for sending a sign request:
 
 ```python
-from signrequest import SignRequest
+from SignRequest import SignRequest
 
 document = 'https://signrequest.com/api/v1/documents/c27f3e0b-616a-4a74-9182-c00d4e3aa16a/'
 sr = SignRequest('API_KEY').send_sign_request(document=document,
